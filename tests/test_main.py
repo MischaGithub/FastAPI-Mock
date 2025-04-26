@@ -55,8 +55,12 @@ def test_invalid_currency():
     
     error_detail = response.json()["detail"][0]
     
-    assert error_detail["loc"] == ["body"]["currency"]
-    assert "USD, EUR, or GBP" in error_detail["msg"]
+    assert error_detail["loc"] == ["body"]
+    assert "USD, EUR, or GBP." in error_detail["msg"]
+    
+    error_detail = response.json()["detail"][0]
+    assert error_detail["loc"] == ["body", "currency"]  # Error location
+    assert "USD, EUR, or GBP" in error_detail["msg"]  # Error message
     
 
 # Test minimum amount
@@ -80,7 +84,7 @@ def test_idempotency():
     
     """ Test idempotency behavior """
     
-    header = {"idempotency_key": "test_key_123"}
+    header = {"idempotency-key": "test_key_123"}
 
     response1 = client.post("/payments", json=VALID_PAYMENT, headers=header)
     

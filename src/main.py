@@ -36,18 +36,15 @@ class PaymentRequest(BaseModel):
         """
         Ensure that the currency is one of the supported currencies
         """
-        
-        support_currencies = ["USD", "EUR", "GBP"]
-        if value not in support_currencies:
+        supported_currencies = ["USD", "EUR", "GBP"]
+        if value not in supported_currencies:
             raise ValueError("Currency must be one USD, EUR, or GBP.")  # Simplified message
         return value
     
     
-    @field_serializer('amount')
+    @field_validator('amount')
     def validate_amount(cls, value):
         """ Ensure the amount meet the minimum requiresments  """
-     
-        
         # Check that the value of the amount
         if value < Decimal('1.00'):
             raise ValueError("Minimum amount is $1.00.")
